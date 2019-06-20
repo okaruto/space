@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+?>
+<script>
+    (function (window) {
+
+        'use strict';
+
+        var Selectors = {
+            status: '[data-status]'
+        };
+
+        var data = new FormData();
+        data.set('status', window.document.querySelector(Selectors.status).dataset.status);
+
+        function checkStatusChange() {
+
+            fetch(
+                window.location.pathname,
+                {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }
+            ).then(function (response) {
+
+                if (response.status === 200) {
+                    window.location.reload();
+                }
+
+            }).catch(function () {
+
+            });
+
+
+        }
+
+        window.setInterval(checkStatusChange, 30 * 1000);
+
+    })(window);
+</script>

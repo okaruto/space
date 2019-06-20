@@ -1,0 +1,6 @@
+/*
+!/.gitignore
+!/logs/
+!/cache/
+!config.template.php
+!settings.dev.template.php

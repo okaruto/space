@@ -1,0 +1,151 @@
+<?php
+
+declare(strict_types=1);
+
+use Okaruto\Space\Router\RouteArguments;
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var bool $invalidTokenType */
+/** @var \Okaruto\Space\Business\Token\AvailableToken $availableToken */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface[] $currencies */
+/** @var \Okaruto\Space\Business\Token\Type\TokenTypeInterface $token */
+/** @var string|null $currencyUnavailable */
+
+$this->layout(
+    'layout',
+    [
+        'title' => 'Create order',
+        'showLinks' => true,
+        'contentClasses' => 'content--centered',
+    ]
+);
+
+?>
+<style>
+    h1 {
+        margin-bottom: 20px;
+    }
+</style>
+<?php if ($availableToken->amount() > 0): ?>
+    <div class="box">
+        <form method="post"
+              action="<?= $this->url(
+                  'order/create',
+                  [
+                      RouteArguments::ARGUMENT_LANGUAGE => $this->lv()->language(),
+                      RouteArguments::ARGUMENT_TOKEN_TYPE => $availableToken->type(),
+                  ]
+              ); ?>">
+            <h1><?= $this->t('order:create:headline:purchasetoken'); ?></h1>
+            <select name="coin" required>
+                <option value="">
+                    <?= $this->t('order:create:select:choosecurrency'); ?>
+                </option>
+                <?php foreach ($currencies as $currency) : ?>
+                    <option value="<?= $currency->code(); ?>"><?= $currency->name(); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit" class="button">
+            <span class="form__submit"><?= $this->t('order:create:button:order',
+                    [
+                        'name' => $availableToken->name(),
+                        'price' => $this->currency($availableToken->currency(), $availableToken->price()),
+                    ]
+                ); ?></span>
+                <?= $this->icon('sync', 'icon--height-16 icon--spin spinner'); ?>
+            </button>
+            <div class="<?= trim('form__message form__message--fail ' . ($currencyUnavailable ?? '')); ?>"
+                 data-message="currencyNotAvailable">
+                <?= $this->icon('hand-spock', 'icon--height-16'); ?>
+                <?= $this->t('order:create:text:currencyunavailable'); ?>
+            </div>
+            <p><?= $this->t('order:create:text:pleasewait'); ?></p>
+            <p><?= $this->t('order:create:text:redirect'); ?></p>
+        </form>
+    </div>
+<?php else : ?>
+    <p><?= $this->t('order:create:text:tokensoutofstock', ['name' => $availableToken->name()]); ?></p>
+<?php endif; ?>
+<?= $this->fetch('order/html_button_back'); ?>
+
+<script>
+    (function (window) {
+
+        'use strict';
+
+        var Classes = {
+            success: 'form--succeeded',
+            fail: 'form--failed',
+            submitting: 'form--submitting',
+            showMessage: 'form__message--show'
+        };
+
+        var Selectors = {
+            form: 'form',
+            coinSelection: '[name="coin"]',
+            currencyNotAvailable: '[data-message="currencyNotAvailable"]'
+        };
+
+        var form = window.document.querySelector(Selectors.form);
+
+        function submitForm(event) {
+
+            event.preventDefault ? event.preventDefault() : false;
+
+            if (form.elements.coin.value.trim() === '') {
+                return;
+            }
+
+            form.classList.add(Classes.submitting);
+
+            var data = new FormData(form);
+
+            fetch(
+                form.action,
+                {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }
+            ).then(function (response) {
+
+                form.classList.remove(Classes.submitting);
+
+                if (response.status === 501) {
+
+                    window.document
+                        .querySelector(Selectors.currencyNotAvailable)
+                        .classList.add(Classes.showMessage);
+
+                    window.document.querySelector(Selectors.coinSelection).value = '';
+
+                } else if (response.status !== 200) {
+
+                    var error = new Error(response.statusText);
+                    error.response = response;
+                    throw error;
+
+                }
+
+                return response.json();
+
+            }).then(function (result) {
+
+                if (result.hasOwnProperty('redirect')) {
+                    form.classList.add(Classes.success);
+                    window.location = result.redirect;
+                }
+
+            }).catch(function () {
+                form.classList.add(Classes.fail);
+            });
+
+        }
+
+        form.attachEvent ? form.attachEvent('submit', submitForm) : form.addEventListener('submit', submitForm);
+
+    })(window);
+</script>

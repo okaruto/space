@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var string $title */
+/** @var string $contentClasses */
+/** @var string $showLinks */
+
+?><!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title><?= $this->e($title); ?> :: <?=$this->lv()->company(); ?> :: <?= $this->lv()->slogan(); ?></title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#9360e6">
+    <style>
+    <?= $this->inlineFile('css/style.css'); ?>
+    </style>
+</head>
+
+<body data-js="false">
+<script>
+    document.querySelector('[data-js]').setAttribute('data-js', 'true');
+</script>
+<header>
+    <a class="logo" href="<?= $this->url('index', ['language' => $this->lv()->language()]); ?>">
+        <span class="name"><?= $this->e($this->lv()->company()); ?></span>
+        <span class="slogan">:: <?= $this->e($this->lv()->slogan()); ?></span>
+    </a>
+    <?php if (($showLinks ?? true)) : ?>
+        <nav>
+            <?= $this->externalLink(
+                    'https://cryptostorm.is/map.html',
+                    $this->t('layout:link:cryptostorm') . $this->icon('wrench', 'icon--height-16')
+            ); ?>
+            <?= $this->fetch('languages'); ?>
+        </nav>
+    <?php endif; ?>
+</header>
+<div class="<?= trim('content ' . $contentClasses); ?>">
+    <?= $this->section('content'); ?>
+</div>
+<footer>
+    <div>
+        <?= $this->icon('copyright', 'icon--height-12'); ?>
+        <?= $this->lv()->year(); ?> <?= $this->t('layout:text:contentstolenwithpride'); ?>
+        <?= $this->externalLink('https://cryptostorm.is/', 'cryptostorm'); ?>
+        <?= $this->t('layout:text:and'); ?>
+        vpndark.net
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var string $name */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface $coin */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+/** @var \Okaruto\Cryptonator\Invoice $invoice */
+
+?>
+<?= $name; ?> token (<?= $this->currency($order->currency(), $order->price()); ?> &#8275;
+<?= $invoice->checkout()->amount(); ?> <?= strtoupper($coin->shortCode()); ?>)

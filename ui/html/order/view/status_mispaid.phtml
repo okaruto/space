@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+/** @var \Okaruto\Cryptonator\Invoice $invoice */
+/** @var null $token */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface $coin */
+/** @var string $timeout */
+/** @var string $name */
+
+?>
+<div class="box">
+    <div class="box__block box__block--vertical">
+        <h1>
+            <?= $this->fetch(
+                'order/view/text_orderinfo',
+                [
+                    'name' => $name,
+                    'coin' => $coin,
+                    'order' => $order,
+                    'invoice' => $invoice,
+                ]
+            ); ?>
+        </h1>
+    </div>
+    <div class="box__block box__block--vertical">
+    <span>
+        <?= $this->t('order:mispaid:text:description'); ?>
+        <?= $this->fetch('order/view/text_support', ['order' => $order]); ?>
+    </div>
+    <div class="box__block box__block--vertical">
+        <?= $this->fetch('order/html_button_back'); ?>
+    </div>
+</div>

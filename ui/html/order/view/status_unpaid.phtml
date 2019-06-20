@@ -1,0 +1,147 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+/** @var \Okaruto\Cryptonator\Invoice $invoice */
+/** @var null $token */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface $coin */
+/** @var string $timeout */
+/** @var string $name */
+
+$link = $coin->code() . ':' . $invoice->checkout()->address() . '?amount=' . $invoice->checkout()->amount();
+
+?>
+<style>
+
+    .qrcode {
+        flex-basis: 150px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+    .qrcode img {
+        width: 100%;
+    }
+
+    @media (max-width: 480px) {
+        .qrcode {
+            display: none;
+        }
+    }
+
+    .payment_text {
+        margin-left: 20px;
+        flex-grow: 1;
+    }
+
+    @media (max-width: 480px) {
+        .payment_text {
+            margin-left: 0;
+        }
+    }
+
+    .address {
+        word-break: break-word;
+    }
+
+    .clipboard > * + * {
+        margin-left: 5px;
+    }
+
+    .coin {
+        height: 1em;
+        margin-left: 5px;
+    }
+
+    @media (min-width: 480px) {
+
+        .box__block--buttons {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .box__block--buttons .button {
+            flex-grow: 1;
+        }
+
+        .box__block--buttons .button + .button {
+            margin-left: 20px;
+        }
+
+    }
+
+    @media (max-width: 480px) {
+        .box__block--buttons {
+            flex-direction: column;
+        }
+
+        .box__block--buttons .button + .button {
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<div class="box" data-status="unpaid">
+    <div class="box__block box__block--vertical">
+        <h1>
+            <?= $this->fetch(
+                'order/view/text_orderinfo',
+                [
+                    'name' => $name,
+                    'coin' => $coin,
+                    'order' => $order,
+                    'invoice' => $invoice,
+                ]
+            ); ?>
+        </h1>
+    </div>
+    <div class="box__block box__block--horizontal">
+        <div class="qrcode">
+            <img src="<?= $this->qrcode($link); ?>">
+        </div>
+        <div class="payment_text">
+            <div class="box__block box__block--vertical">
+                <span>
+                  <?= sprintf(
+                      $this->t('order:unpaid:text:description'),
+                      sprintf(
+                          '<br><strong>%s %s</strong>',
+                          $invoice->checkout()->amount(),
+                          $coin->name()
+                      )
+                  ); ?>
+                    <strong class="address"><?= $invoice->checkout()->address(); ?></strong><br>
+                    <br>
+                    <?= sprintf(
+                        $this->t('order:unpaid:text:timeout'),
+                        sprintf(
+                            '<strong data-timeout>%s</strong>',
+                            $timeout
+                        )
+
+                    ); ?>
+                </span>
+                <?= $this->fetch('order/view/text_please_refresh'); ?>
+            </div>
+        </div>
+    </div>
+    <div class="box__block box__block--horizontal box__block--buttons">
+        <a class="button" href="<?= $link; ?>">
+            <span><?= $this->t('order:unpaid:button:openinwallet'); ?></span>
+            <img class="coin" src="<?= $coin->image(); ?>">
+        </a>
+        <a class="button clipboard" data-js-only data-clipboard-text="<?= $invoice->checkout()->address(); ?>">
+            <span><?= $this->t('order:unpaid:button:copyaddress'); ?></span>
+            <?= $this->icon('clipboard', 'icon--height-16'); ?>
+        </a>
+    </div>
+    <div class="box__block box__block--vertical">
+        <?= $this->fetch('order/view/text_bookmark', ['order' => $order]); ?>
+    </div>
+</div>
+
+<?= $this->fetch('order/view/script_clipboard'); ?>
+<?= $this->fetch('order/view/script_timer'); ?>
+<?= $this->fetch('order/view/script_update'); ?>

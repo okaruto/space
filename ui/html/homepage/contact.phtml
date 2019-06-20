@@ -1,0 +1,225 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var string $formStatus */
+
+$mailUri = sprintf(
+    'mailto:%s?subject=%s',
+    $this->lv()->email(),
+    $this->e('Question about your service')
+);
+?>
+<h1 id="contact">
+    <?= $this->t('index:contact:headline', ['heart' => $this->icon('heart', 'icon--height-24')]); ?>
+</h1>
+<div class="contact">
+    <div class="contact__text">
+        <div>
+            <span>Email: <a href="<?= $mailUri; ?>"><?= $this->lv()->email(); ?></a></span>
+            <?php if ($this->lv()->publicKeyAvailable()) : ?>
+            <input id="publickey" type="checkbox" class="toggleinput">
+            <label for="publickey" class="toggle">
+                <?= $this->t(
+                    'index:contact:text:showhidepublickey',
+                    [
+                        'show' => sprintf(
+                            '<span class="open">%s</span>',
+                            $this->t('index:contact:text:show')
+                        ),
+                        'hide' =>
+                            sprintf(
+                                '<span class="close">%s</span>',
+                                $this->t('index:contact:text:hide')
+                            ),
+                    ]
+                ); ?>
+                <?= $this->externalLink(
+                    sprintf('http://pgp.mit.edu/pks/lookup?op=get&search=%s', $this->lv()->publicKeyId()),
+                    sprintf('(%s)', $this->lv()->publicKeyId())
+                ); ?>
+                <span class="open"><?= $this->icon('caret-down', 'icon--height-10'); ?></span>
+                <span class="close"><?= $this->icon('caret-up', 'icon--height-10'); ?></span>
+            </label>
+            <pre class="toggled" data-publickey><?= $this->lv()->publicKey(); ?></pre>
+            <?php endif; ?>
+        </div>
+    </div>
+    <form class="<?= trim('contact__form ' . ($formStatus ?? '')); ?>"
+          action="<?= $this->url('contact'); ?>"
+          method="post"
+          enctype="multipart/form-data"
+          autocomplete="off">
+        <?php if ($this->lv()->publicKeyAvailable()) : ?>
+        <p data-js-only><?= $this->t('index:contact:text:encrypted'); ?></p>
+        <noscript>
+            <p><?= $this->t('index:contact:text:unencrypted'); ?></p>
+        </noscript>
+        <?php endif; ?>
+        <div class="contact__information">
+            <div>
+                <label><?= $this->t('index:contact:form:email'); ?></label>
+                <input type="email" name="email"
+                       placeholder="<?= $this->t('index:contact:form:emailplaceholder'); ?>" required>
+            </div>
+            <div>
+                <label><?= $this->t('index:contact:form:subject'); ?></label>
+                <input type="text" name="subject"
+                       placeholder="<?= $this->t('index:contact:form:subjectplaceholder'); ?>" required>
+            </div>
+        </div>
+        <label><?= $this->t('index:contact:form:message'); ?></label>
+        <textarea name="message" placeholder="<?= $this->t('index:contact:form:messageplaceholder'); ?>"
+                  required></textarea>
+        <button type="submit" class="button">
+            <span class="form__submit"><?= $this->t('index:contact:form:submit'); ?></span>
+            <?= $this->icon('sync', 'icon--height-16 icon--spin spinner'); ?>
+        </button>
+        <div class="form__message form__message--success">
+            <?= $this->icon('thumbs-up', 'icon--height-16'); ?>
+            <?= $this->t('index:contact:form:success'); ?>
+        </div>
+        <div class="form__message form__message--fail">
+            <?= $this->icon('hand-spock', 'icon--height-16'); ?>
+            <?= $this->t('index:contact:form:fail'); ?>
+        </div>
+    </form>
+</div>
+<script>
+    (function (window, document) {
+
+        'use strict';
+
+        var Classes = {
+            success: 'form--succeeded',
+            fail: 'form--failed',
+            submitting: 'form--submitting'
+        };
+
+        var Selectors = {
+            form: '.contact__form',
+            publicKey: '[data-publickey]'
+        };
+
+        var form = document.querySelector(Selectors.form);
+        var publicKey = document.querySelector(Selectors.publicKey);
+        var publicKeyPresent = publicKey !== null;
+        var submitting = false;
+
+        function initializeMessageEncryption(plaintextMessage, callback) {
+
+            if (typeof window.openpgp === 'undefined') {
+
+                var scriptTag = document.createElement('script');
+
+                scriptTag.src = '/js/openpgp/dist/openpgp.min.js';
+
+                scriptTag.onload = function() {
+
+                    window.openpgp.initWorker({ path: '/js/openpgp/dist/openpgp.worker.min.js' });
+                    encryptMessage(plaintextMessage, callback)
+
+                };
+
+                document.querySelector('head').appendChild(scriptTag);
+
+            } else {
+                encryptMessage(message, callback);
+            }
+
+        }
+
+        function encryptMessage(plaintextMessage, callback) {
+
+            window.openpgp.key.readArmored(
+                publicKey.textContent
+            ).then(function(keyList) {
+
+                window.openpgp.encrypt(
+                    {
+                        message: window.openpgp.message.fromText(plaintextMessage),
+                        publicKeys: keyList.keys
+                    }
+                ).then(function (ciphertextMessage) {
+                    callback(ciphertextMessage.data);
+                });
+
+            });
+
+        }
+
+        function submitForm(event) {
+
+            event.preventDefault();
+
+            if (form.elements.email.value.trim() === ''
+                || form.elements.subject.value.trim() === ''
+                || form.elements.message.value.trim() === ''
+            ) {
+                return;
+            }
+
+            if (submitting) {
+                return false;
+            }
+
+            form.classList.add(Classes.submitting);
+            submitting = true;
+
+            var callbackSendFormData = function (message) {
+
+                var data = new FormData(form);
+                data.set('message', message);
+
+                fetch(
+                    form.action,
+                    {
+                        method: 'POST',
+                        body: data,
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    }
+                ).then(function (response) {
+
+                    if (response.status !== 200) {
+
+                        var error = new Error(response.statusText);
+                        error.response = response;
+                        throw error;
+
+                    }
+
+                    form.classList.add(Classes.success);
+                    form.classList.remove(Classes.submitting);
+                    form.reset();
+
+                    Array.from(form.elements).forEach(function(element) {element.disabled = true; });
+
+                }).catch(function () {
+
+                    form.classList.add(Classes.fail);
+                    form.classList.remove(Classes.submitting);
+
+                }).finally(function() {
+                    submitting = false;
+                });
+
+            };
+
+            var plaintextMessage = form.elements.message.value.trim();
+
+            if (publicKeyPresent) {
+                initializeMessageEncryption(plaintextMessage, callbackSendFormData);
+            } else {
+                callbackSendFormData(plaintextMessage)
+            }
+
+        }
+
+        typeof form.attachEvent === 'undefined' ? form.addEventListener('submit', submitForm) : form.attachEvent('submit', submitForm);
+
+    })(window, window.document);
+</script>

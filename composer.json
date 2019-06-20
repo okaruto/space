@@ -1,0 +1,110 @@
+{
+  "name": "okaruto/space",
+  "description": "Platform for reselling cryptostorm tokens",
+  "type": "project",
+  "license": "MIT",
+  "keywords": [
+    "cryptostorm",
+    "vpn",
+    "token",
+    "reseller",
+    "security",
+    "privacy",
+    "cryptocurrency"
+  ],
+  "homepage": "https://github.com/okaruto/space",
+  "authors": [
+    {
+      "name": "Okaruto Shirukoto",
+      "email": "okaruto@protonmail.com",
+      "homepage": "https://okaruto.space",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "okaruto@protonmail.com",
+    "source": "https://github.com/okaruto/space",
+    "issues": "https://github.com/okaruto/space/issues",
+    "wiki": "https://github.com/okaruto/space/wiki"
+  },
+  "require": {
+    "php": "^7.1",
+    "ext-curl": "*",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-openssl": "*",
+    "ext-pdo": "*",
+    "ext-pdo_sqlite": "*",
+    "ext-sqlite3": "*",
+    "slim/slim": "^3.0",
+    "fig/http-message-util": "^1.1",
+    "lmc/http-constants": "^1.0",
+    "monolog/monolog": "^1.24",
+    "league/plates": "^3.3",
+    "league/container": "^3.2",
+    "robmorgan/phinx": "^0.10",
+    "bacon/bacon-qr-code": "^1.0",
+    "willdurand/negotiation": "^2.3",
+    "swiftmailer/swiftmailer": "^6.1",
+    "symfony/console": "^4.2",
+    "symfony/css-selector": "^4.2",
+    "symfony/dom-crawler": "^4.2",
+    "juhara/zzzstream": "^1.0",
+    "guzzlehttp/guzzle": "^6.3",
+    "okaruto/cryptonator": "^1.0"
+  },
+  "require-dev": {
+    "ext-xdebug": "*",
+    "php-console/php-console": "^3.1",
+    "phpunit/phpunit": "^7.0",
+    "php-coveralls/php-coveralls": "^2.1",
+    "squizlabs/php_codesniffer": "^3.0",
+    "vimeo/psalm": "^2.0",
+    "zalas/phpunit-injector": "^1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Okaruto\\Space\\": "./src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Okaruto\\Space\\Tests\\": "./test/"
+    }
+  },
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "scripts": {
+    "check": [
+      "@cs-check",
+      "@psalm-check",
+      "@test"
+    ],
+    "cs-check": "phpcs --parallel=2 --standard=PSR2 ./src ",
+    "cs-fix": "phpcbf --parallel=2 --standard=PSR2 ./src",
+    "psalm-check": [
+      "mkdir -p ./test-result && psalm --config=./psalm.xml --threads=2 --no-cache --report=./test-result/psalm-report.xml --show-info=false"
+    ],
+    "test": "phpunit --colors=always",
+    "test-coverage": [
+      "phpunit --colors=always --coverage-clover ./test-result/coverage.xml --coverage-html ./test-result/coverage/"
+    ],
+    "install-production": [
+      "composer install --no-dev --prefer-dist --optimize-autoloader --classmap-authoritative --no-progress",
+      "@migrate-database",
+      "@remove-cached-files",
+      "@remove-routercache"
+    ],
+    "remove-cached-files": "rm -f ./data/cache/*.php",
+    "remove-routercache": "rm -f ./data/routecache.php",
+    "migrate-database": "phinx migrate -e production -c ./db/phinx.php",
+    "reset-database": [
+      "rm -f ./data/database.sqlite",
+      "@migrate-database"
+    ]
+  }
+}

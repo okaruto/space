@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+/** @var \Okaruto\Cryptonator\Invoice $invoice */
+/** @var \Okaruto\Space\Business\Token\Token $token */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface $coin */
+/** @var string $timeout */
+/** @var string $name */
+
+?>
+<style>
+    .qrcode {
+        flex-basis: 150px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+    .qrcode img {
+        width: 100%;
+    }
+
+    .payment_text {
+        margin-left: 20px;
+        flex-grow: 1;
+    }
+
+    .token {
+        font-size: 24px;
+        line-height: 2em;
+    }
+
+    .clipboard > * + * {
+        margin-left: 5px;
+    }
+</style>
+
+<div class="box">
+    <div class="box__block box__block--vertical">
+        <h1>
+            <?= $this->fetch(
+                'order/view/text_orderinfo',
+                [
+                    'name' => $name,
+                    'coin' => $coin,
+                    'order' => $order,
+                    'invoice' => $invoice,
+                ]
+            ); ?>
+        </h1>
+    </div>
+    <div class="box__block box__block--horizontal">
+        <div class="qrcode">
+            <img src="<?= $this->qrcode(hash('sha512', $token->value())); ?>">
+        </div>
+        <div class="payment_text">
+            <div class="box__block box__block--vertical">
+                <span><?= $this->t('order:paid:text:yourtoken'); ?></span>
+                <strong class="token"><?= $token->value(); ?></strong>
+                <div class="box__block box__block--vertical">
+                    <a class="button clipboard" data-js-only data-clipboard-text="<?= $token->value(); ?>">
+                        <span><?= $this->t('order:paid:button:copytoken'); ?></span>
+                        <?= $this->icon('clipboard', 'icon--height-16'); ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p><?= $this->t('order:paid:text:qrcode'); ?></p>
+    <div class="box__block box__block--vertical">
+        <span><?= $this->t('order:paid:text:info'); ?></span>
+    </div>
+    <form class="box__block" method="post" enctype="multipart/form-data">
+        <span><?= sprintf(
+            $this->t('order:paid:text:remotetimeout'),
+            sprintf('<strong data-timeout>%s</strong>', $timeout)
+        ); ?></span>
+        <input type="hidden" name="remove" value="true">
+        <button type="submit" class="button">
+            <span class="form__submit"><?= $this->t('order:paid:button:remove'); ?></span>
+            <?= $this->icon('sync', 'icon--height-16 icon--spin spinner'); ?>
+        </button>
+    </form>
+    <?= $this->fetch('order/html_button_back'); ?>
+</div>
+
+<?= $this->fetch('order/view/script_timer'); ?>
+<?= $this->fetch('order/view/script_clipboard'); ?>

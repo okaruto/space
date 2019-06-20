@@ -1,0 +1,97 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var bool $autoTokenType */
+/** @var string $formStatus */
+/** @var string $formTextArea */
+/** @var string $formSuccessMessage */
+/** @var string $formErrorMessage */
+/** @var \Okaruto\Space\Business\Token\Type\TokenTypeInterface[] $tokenTypes */
+
+$this->layout(
+    'layout',
+    [
+        'title' => 'Admin Area - Add tokens',
+        'showLinks' => false,
+        'contentClasses' => 'content--centered',
+    ]
+);
+
+?>
+<style>
+    .admin_form {
+        display: flex;
+        flex-direction: column;
+        width: 350px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .admin_form > * + * {
+        margin-top: 10px;
+    }
+
+    .admin_form h1 {
+        border: none;
+    }
+
+    .admin_form textarea {
+        min-height: 200px;
+    }
+
+    .admin_form button {
+        width: 100%;
+    }
+
+    .form__messages {
+        width: 100%;
+    }
+
+    .admin_form--succeeded .form__messages .form__message--success {
+        display: block;
+    }
+
+    .admin_form--failed .form__messages .form__message--fail {
+        display: block;
+    }
+</style>
+<form class="admin_form <?= $formStatus ?? '' ?>" method="post">
+    <h1>Token Admin Area</h1>
+
+    <div>
+        <?php if ($autoTokenType) : ?>
+        <span>Tokens will be verified with cryptonator and their types will be automaticall detected.</span>
+        <?php else : ?>
+        <span>Tokens will only be verified for correct format, you have to specify the types yourself.</span>
+        <input id="token_overview" type="checkbox" class="toggleinput">
+        <label for="token_overview" class="toggle">
+            <span>Token types</span>
+            <span class="open"><?= $this->icon('caret-down', 'icon--height-10'); ?></span>
+            <span class="close"><?= $this->icon('caret-up', 'icon--height-10'); ?></span>
+        </label>
+        <p class="toggled">
+            <?= join('<br>', $tokenTypes ?? []); ?>
+        </p>
+        <?php endif; ?>
+    </div>
+    <textarea name="tokens" autocomplete="off" placeholder="<?= $autoTokenType ? 'token' : 'token;type'; ?>"
+              required><?= $this->e($formTextArea ?? ''); ?></textarea>
+    <input name="key" type="password" required>
+    <button type="submit" class="button">
+        <span class="form__submit">Add tokens</span>
+        <?= $this->icon('sync', 'icon--height-16 icon--spin spinner'); ?>
+    </button>
+    <div class="form__messages">
+        <div class="form__message form__message--success">
+            <?= $this->icon('thumbs-up', 'icon--height-16'); ?>
+            <?= $formSuccessMessage ?? ''; ?>
+        </div>
+        <div class="form__message form__message--fail">
+            <?= $this->icon('hand-spock', 'icon--height-16'); ?>
+            <?= $formErrorMessage ?? ''; ?>
+        </div>
+    </div>
+</form>
+

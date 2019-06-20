@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+?>
+<script src="/js/clipboard/dist/clipboard.min.js"></script>
+<script>
+    (function (window) {
+
+        'use strict';
+
+        var Selectors = {
+            clipboard: '.clipboard'
+        };
+
+        new window.Clipboard(Selectors.clipboard);
+
+    })(window);
+</script>

@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Token\AvailableToken[] $availableTokens */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface[] $cryptoCurrencies */
+
+$this->layout(
+    'layout',
+    [
+        'title' => 'Home',
+        'showLinks' => true,
+        'contentClasses' => '',
+    ]
+);
+
+?>
+<?= $this->fetch('homepage/teaser'); ?>
+<?= $this->fetch('homepage/cryptostorm'); ?>
+<?= $this->fetch(
+    'homepage/reseller',
+    [
+        'availableTokens' => $availableTokens,
+        'cryptoCurrencies' => $cryptoCurrencies,
+    ]
+); ?>
+<?= $this->fetch('homepage/contact'); ?>

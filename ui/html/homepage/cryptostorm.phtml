@@ -1,0 +1,71 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+?>
+<h1>
+    <?= $this->t('index:cryptostorm:text:catchphrase'); ?>
+</h1>
+<div>
+    <ul>
+        <li><?= $this->t(
+                'index:cryptostorm:text:connections',
+                [
+                    'easyconnect' => $this->externalLink(
+                        'https://cryptostorm.is/#section6',
+                        $this->t('index:cryptostorm:link:easytoconnect')
+                    ),
+                    'windowswidget' => $this->externalLink(
+                        'https://cryptostorm.org/widget',
+                        $this->t('index:cryptostorm:link:windowswidget')
+                    ),
+                    'openvpn' => $this->externalLink(
+                        'https://github.com/cryptostorm/cryptostorm_client_configuration_files/',
+                        $this->t('index:cryptostorm:link:openvpn')
+                    ),
+                ]
+            ); ?></li>
+        <li><?= $this->t('index:cryptostorm:text:adjectives'); ?></li>
+        <li><?= $this->t('index:cryptostorm:text:organization'); ?></li>
+        <li><?= $this->t('index:cryptostorm:text:members'); ?></li>
+        <li><?= $this->t(
+                'index:cryptostorm:text:nologs',
+                [
+                    'seppuku' => $this->externalLink('https://cryptostorm.is/seppuku.html', 'Privacy Seppuku'),
+                ]
+            ); ?></li>
+        <li><?= $this->t(
+                'index:cryptostorm:text:tokenbasedauth',
+                [
+                    'tokenbased' => $this->externalLink(
+                        'https://cryptostorm.org/viewtopic.php?f=37&t=6173',
+                        $this->t('index:cryptostorm:link:tokenbasedauth')
+                    ),
+                ]
+            ); ?></li>
+    </ul>
+</div>
+<div class="features">
+    <div>
+        <h2>
+            <?= $this->icon('hand-peace', 'icon--height-24'); ?>
+            <span><?= $this->t('index:cryptostorm:headline:genuine'); ?></span>
+        </h2>
+        <p><?= $this->t('index:cryptostorm:text:genuine'); ?></p>
+    </div>
+    <div>
+        <h2>
+            <?= $this->icon('lock', 'icon--height-24'); ?>
+            <span><?= $this->t('index:cryptostorm:headline:strongcrypto'); ?></span>
+        </h2>
+        <p><?= $this->t('index:cryptostorm:text:strongcrypto'); ?></p>
+    </div>
+    <div>
+        <h2>
+            <?= $this->icon('rebel', 'icon--height-24'); ?>
+            <span><?= $this->t('index:cryptostorm:headline:battletested'); ?></span>
+        </h2>
+        <p><?= $this->t('index:cryptostorm:text:battletested'); ?></p>
+    </div>
+</div>

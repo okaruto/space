@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+
+?>
+<span><?= $this->t('order:text:bookmark', [
+        'orderId' => sprintf('<strong>%s</strong>', $order->id())
+    ]
+); ?></span>

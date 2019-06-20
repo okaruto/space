@@ -1,0 +1,158 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Token\AvailableToken[] $availableTokens */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface[] $cryptoCurrencies */
+
+?>
+<h1>
+    <?= $this->e($this->lv()->company()); ?> - <?= $this->t('index:reseller:text:indepedentcsreseller'); ?>
+</h1>
+<div>
+    <ul>
+        <li>
+            <?= $this->t('index:reseller:text:bulkpurchase'); ?>
+        </li>
+        <li>
+            <?= $this->t('index:reseller:text:noassociation', ['name' => $this->lv()->company()]); ?>
+        </li>
+        <li>
+            <?= $this->t('index:reseller:text:noknowledge', ['name' => $this->lv()->company()]); ?>
+        </li>
+        <li>
+            <?= $this->t(
+                'index:reseller:text:paymentprovider',
+                ['link' => $this->externalLink('https://cryptonator.com', 'Cryptonator.com')]
+            ); ?>
+        </li>
+        <li>
+            <?= $this->t('index:reseller:text:noemailneeded'); ?>
+        </li>
+        <?php if ($this->lv()->torDomainAvailable()) : ?>
+            <li>
+                <?= $this->t(
+                    'index:reseller:text:tor',
+                    ['domain' => '<strong>' . $this->lv()->torDomain() . '</strong>']
+                ); ?>
+            </li>
+        <?php endif; ?>
+        <li>
+            <?= $this->t('index:reseller:text:nojscookies'); ?>
+        </li>
+        <li>
+            <?= $this->t('index:reseller:text:transactions'); ?>
+        </li>
+        <li>
+            <?= $this->t('index:reseller:text:qrcode'); ?>
+        </li>
+    </ul>
+</div>
+<div class="features">
+    <div class="feature">
+        <h2><?= $this->t('index:reseller:headline:step1'); ?></h2>
+        <div class="feature__text">
+            <span><?= $this->t('index:reseller:text:available'); ?></span>
+            <?php if (!empty($availableTokens)) : ?>
+                <?php foreach ($availableTokens as $type => $token) : ?>
+                    <a class="button"
+                       href="<?= $this->url('order/create', ['tokenType' => $token->type()]); ?>"
+                       target="_blank">
+                        <?= sprintf(
+                            '%s (%s) (%s %s)',
+                            $token->name(),
+                            $this->currency($token->currency(), $token->price()),
+                            $token->amount(),
+                            $this->t('index:reseller:text:instock')
+                        ); ?>
+                    </a>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <span class="button">
+                <?= $this->t('index:reseller:text:outofstock', ['break' => '<br>']); ?>
+            </span>
+            <?php endif; ?>
+            <input id="currencies" type="checkbox" class="toggleinput">
+            <label for="currencies" class="toggle">
+                <?= $this->t('index:reseller:text:showhidecurrencies', [
+                    'hide' => sprintf('<span class="close">%s</span>', $this->t('index:reseller:text:hide')),
+                    'show' => sprintf('<span class="open">%s</span>', $this->t('index:reseller:text:show')),
+                ]); ?>
+                <span class="open"><?= $this->icon('caret-down', 'icon--height-10'); ?></span>
+                <span class="close"><?= $this->icon('caret-up', 'icon--height-10'); ?></span>
+            </label>
+            <ul class="cryptocurrencies toggled">
+                <?php foreach ($cryptoCurrencies as $currency) : ?>
+                    <li>
+                        <img src="<?= $currency->image(); ?>"><?= $this->e($currency->name()); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+
+    </div>
+    <div class="feature">
+        <h2><?= $this->t('index:reseller:headline:step2'); ?></h2>
+        <div class="feature__text">
+            <ul>
+                <li><?= $this->t(
+                        'index:reseller:text:receiveandverify',
+                        [
+                            'link' => $this->externalLink(
+                                'https://cryptostorm.nu/',
+                                $this->t('index:reseller:text:verify')
+                            ),
+                        ]
+                    ); ?>
+                </li>
+                <li><?= $this->t('index:reseller:text:calculatehash',
+                        [
+                            'link' => $this->externalLink(
+                                'https://cryptostorm.is/sha512.html',
+                                $this->t('index:reseller:text:calculator')
+                            ),
+                        ]
+                    ); ?>
+                </li>
+                <li><?= $this->t('index:reseller:text:nopassword'); ?></li>
+            </ul>
+        </div>
+    </div>
+    <div class="feature">
+        <h2><?= $this->t('index:reseller:headline:step3'); ?></h2>
+        <div class="feature__text">
+            <ul>
+                <li><?= $this->t(
+                        'index:reseller:text:trywidget',
+                        [
+                            'link' => $this->externalLink(
+                                'https://cryptostorm.is/#section6',
+                                $this->t('index:reseller:text:widget')
+                            ),
+                        ]
+                    ); ?>
+                </li>
+                <li><?= $this->t(
+                        'index:reseller:text:otheroses',
+                        [
+                            'link' => $this->externalLink(
+                                'https://cryptostorm.is/#section6',
+                                $this->t('index:reseller:text:connectionguides')
+                            ),
+                        ]
+                    ); ?>
+                </li>
+                <li><?= $this->t('index:reseller:text:openvpn',
+                        [
+                            'link' => $this->externalLink(
+                                'https://cryptostorm.is/configs/',
+                                $this->t('index:reseller:text:configurationfiles')
+                            ),
+                        ]
+                    ); ?>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

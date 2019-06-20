@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+?>
+<script>
+    (function (window) {
+
+        'use strict';
+
+        var Selectors = {
+            timeout: '[data-timeout]'
+        };
+
+        function pad(count) {
+            var str = '' + count;
+            var pad = '00';
+            return pad.substring(0, pad.length - str.length) + str;
+        }
+
+        var countdown = window.document.querySelector(Selectors.timeout);
+        var minuteSeconds = countdown.textContent.split(':');
+
+        var baseTimeout = new Date();
+        baseTimeout.setHours(0);
+        baseTimeout.setMinutes(0);
+        baseTimeout.setSeconds(0);
+        baseTimeout.setMilliseconds(0);
+
+        var timeout = new Date();
+        timeout.setHours(0);
+        timeout.setMinutes(minuteSeconds[0]);
+        timeout.setSeconds(minuteSeconds[1]);
+
+        var interval = window.setInterval(function () {
+
+            timeout.setSeconds(timeout.getSeconds() - 1);
+
+            if (timeout < baseTimeout) {
+
+                countdown.textContent = '00:00';
+                window.clearInterval(interval);
+                return;
+
+            }
+
+            countdown.textContent = [pad(timeout.getMinutes()), pad(timeout.getSeconds())].join(':');
+
+        }, 1000);
+
+    })(window);
+</script>

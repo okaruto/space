@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+
+?>
+<div class="box">
+    <h1><?= $this->t('order:clear:headline'); ?></h1>
+    <p><?= $this->t('order:clear:description'); ?></p>
+    <?= $this->fetch('order/html_button_back'); ?>
+</div>

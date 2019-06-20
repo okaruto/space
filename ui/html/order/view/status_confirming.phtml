@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+/** @var \Okaruto\Cryptonator\Invoice $invoice */
+/** @var null $token */
+/** @var \Okaruto\Space\Business\CryptoCurrency\CryptoCurrencyInterface $coin */
+/** @var string $timeout */
+/** @var string $name */
+
+?>
+<style>
+    .confirming {
+        height: 200px;
+        font-size: 150px;
+        color: #FFFFFF;
+    }
+</style>
+<div class="box" data-status="confirming">
+    <h1><?= $this->t('order:confirming:headline', ['name' => $name]); ?></h1>
+    <p><?= $this->t('order:confirming:text:description'); ?></p>
+    <div class="confirming box__block box__block--centered">
+        <?= $this->icon('cog', 'icon--height-150 icon--spin'); ?>
+    </div>
+    <?= $this->fetch('order/view/text_please_refresh'); ?>
+    <div class="box__block box__block--vertical">
+        <?= $this->fetch('order/view/text_bookmark', ['order' => $order]); ?>
+    </div>
+</div>
+
+<?= $this->fetch('order/view/script_update'); ?>

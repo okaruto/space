@@ -1,0 +1,9 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var \Okaruto\Space\Business\Order\Order $order */
+
+?>
+<?= $this->t('order:text:support', ['orderId' => sprintf('<strong>%s</strong>', $order->id())]); ?>

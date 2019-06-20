@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+use Fig\Http\Message\StatusCodeInterface;
+
+/** @var \Okaruto\Space\Renderer\TemplateInterface $this */
+/** @var int $status */
+/** @var string $reason */
+
+$this->layout(
+    'layout',
+    [
+        'title' => sprintf('%d %s', $status, $reason),
+        'showLinks' => true,
+        'contentClasses' => '',
+    ]
+);
+
+?>
+
+<h1><?= $this->t('error:text:oops'); ?></h1>
+<p><?= $this->t('error:text:reason',
+        ['reason' => '<strong>' . sprintf('%d %s', $status, $reason) . '</strong>']); ?></p>
+<?php if ($status === StatusCodeInterface::STATUS_NOT_FOUND) : ?>
+    <p><?= $this->t('error:text:404', ['home' => '<a href="/">' . $this->t('error:link:home') . '</a>']); ?></p>
+<?php endif; ?>
