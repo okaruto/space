@@ -3,6 +3,8 @@
 Okaruto/Space can be used to  create a cryptostorm.is token reselling page.
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg)](https://php.net/)
+[![Build Status](https://travis-ci.com/okaruto/space.svg?branch=master)](https://travis-ci.com/okaruto/space) 
+[![Coverage Status](https://coveralls.io/repos/github/okaruto/space/badge.svg?branch=master)](https://coveralls.io/github/okaruto/space?branch=master)
 
 ## Prerequisites
 
