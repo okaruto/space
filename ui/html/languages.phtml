@@ -8,9 +8,12 @@ $languages = $this->languageSelect();
 
 ?>
 <?php if (!empty($languages)) : ?>
+<input id="languages" type="checkbox" class="toggleinput">
 <div class="languages">
     <?php $currentLanguage = array_shift($languages); ?>
-    <a><span class="languages__flag" style="background-image: url('<?= $currentLanguage['image']; ?>');"></span></a>
+    <label for="languages">
+        <span class="languages__flag" style="background-image: url('<?= $currentLanguage['image']; ?>');"></span>
+    </label>
     <div class="languages__selector">
     <?php foreach ($languages as $language) : ?>
         <a href="<?= $language['url']; ?>"><span class="languages__flag" style="background-image: url('<?= $language['image']; ?>');"></span></a>

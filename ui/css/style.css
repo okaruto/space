@@ -65,7 +65,7 @@ header {
     }
 
     header .logo {
-        padding-right: 40px;
+        margin-right: 40px;
     }
 
 }
@@ -501,7 +501,6 @@ button[type="submit"] {
 }
 
 .languages {
-    cursor: pointer;
     position: absolute;
     right: -60px;
     top: -10px;
@@ -512,9 +511,9 @@ button[type="submit"] {
     border-color: transparent;
 }
 
-.languages:hover {
-    border: 1px solid #FFF;
-    background: #000;
+.languages,
+.languages * {
+    cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
@@ -542,16 +541,21 @@ button[type="submit"] {
     margin-top: 10px;
 }
 
-.languages:not(:hover) .languages__selector {
-    display: none;
-}
-
 .languages__selector a + a {
     margin-top: 10px;
 }
 
 .languages a:hover .languages__flag {
     border-color: #AE57CE;
+}
+
+#languages:checked + .languages {
+    border: 1px solid #FFF;
+    background: #000;
+}
+
+#languages:not(:checked) + .languages .languages__selector {
+    display: none;
 }
 
 .icon {
