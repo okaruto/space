@@ -18,7 +18,7 @@ return array_replace_recursive(
             'logger' => [ // Monolog settings
                 'name' => 'space',
                 'path' => APPLICATION . '/data/logs/space.log',
-                'level' => \Monolog\Logger::NOTICE,
+                'level' => \Monolog\Logger::INFO,
             ],
             'translation' => [
                 'path' => APPLICATION . '/languages',
