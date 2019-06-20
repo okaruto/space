@@ -86,6 +86,6 @@ return [
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 your PGP/GPG public key comes in here
 -----END PGP PUBLIC KEY BLOCK-----
-EOT,
+EOT
     ],
 ];
