@@ -47,8 +47,8 @@ class TokenValidatorTest extends TestCase
         $uri = reset($requests)['request']->getUri();
 
         $this->assertSame('https', $uri->getScheme());
-        $this->assertSame('cryptostorm.nu', $uri->getHost());
-        $this->assertSame('token=' . self::TOKEN_HASH, $uri->getQuery());
+        $this->assertSame('cryptostorm.is', $uri->getHost());
+        $this->assertSame('pubtokf?token=' . self::TOKEN_HASH, $uri->getQuery());
     }
 
     public function testTokenValidatorNoVerify(): void

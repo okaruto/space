@@ -21,7 +21,7 @@ use Okaruto\Space\Config\AdminConfig;
 final class TokenValidator
 {
 
-    private const VALIDATION_URL = 'https://cryptostorm.nu/';
+    private const VALIDATION_URL = 'https://cryptostorm.is/pubtokf';
 
     /** @var bool */
     private $verify;

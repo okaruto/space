@@ -7,7 +7,6 @@ namespace Okaruto\Space\Command;
 use GuzzleHttp\ClientInterface;
 use Okaruto\Space\Business\Token\TokenValidationResult;
 use Okaruto\Space\Business\Token\TokenValidator;
-use Okaruto\Space\Config\AdminConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class VerifyTokenCommand extends Command
 {
 
-    private const URL = 'https://cryptostorm.nu/?token=';
+    private const URL = 'https://cryptostorm.is/pubtokf?token=';
 
     private const REASONS = [
         TokenValidationResult::REASON_UNKNOWN =>
@@ -64,7 +63,7 @@ final class VerifyTokenCommand extends Command
     protected function configure()
     {
         $this->setName('token:verify')
-             ->setDescription('Verify a token with cryptostorm.nu')
+             ->setDescription('Verify a token with cryptostorm.is/tokenchecker')
              ->addOption(
                  'token',
                  't',

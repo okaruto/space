@@ -25,9 +25,9 @@ final class TokenValidationResult
     public const REASON_TOKEN_SPENT = 4;
 
     private const REGEX_FORMAT = '/^(?<token>[a-zA-z0-9]{5}-[a-zA-z0-9]{5}-[a-zA-z0-9]{5}-[a-zA-z0-9]{5})$/';
-    private const CSS_SELECTOR = 'div[style="text-align: center;"] + div[style="text-align: center;"]';
+    private const CSS_SELECTOR = 'body';
 
-    private const TEXT_VALID = 'That token is VALID and has not yet been used.';
+    private const TEXT_VALID = 'is VALID and has not yet been used.';
     private const TEXT_INVALID = 'Invalid token.';
     private const TEXT_SPENT = 'token is VALID and will expire in';
 

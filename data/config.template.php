@@ -16,7 +16,7 @@ use Okaruto\Space\Config\TimeoutConfig;
 return [
     Config::KEY_ADMIN => [
         AdminConfig::KEY_KEY => '', // Admin key for adding new tokens, please use a very long random string
-        AdminConfig::KEY_VERIFY_TOKENS => true, // Should new tokens be checked against cryptostorm.nu for validity?
+        AdminConfig::KEY_VERIFY_TOKENS => true, // Should new tokens be checked against cryptostorm.is/tokenchecker for validity?
     ],
     Config::KEY_MAIL => [
         // Swift mailer transport to use for email sending, other transports may need a different dependency configuration

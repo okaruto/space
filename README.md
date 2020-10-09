@@ -1,6 +1,6 @@
 # Okaruto/Space
 
-Okaruto/Space can be used to  create a cryptostorm.is token reselling page.
+Okaruto/Space can be used to create a cryptostorm.is token reselling page. You can see it working at [okaruto.space](https://okaruto.space).
 
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg)](https://php.net/)
 [![Build Status](https://travis-ci.com/okaruto/space.svg?branch=master)](https://travis-ci.com/okaruto/space) 
@@ -8,7 +8,7 @@ Okaruto/Space can be used to  create a cryptostorm.is token reselling page.
 
 ## Prerequisites
 
-* Your need a Cryptonator **Merchant** account which you can get here for free: https://www.cryptonator.com/auth/signup/
+* Your need a **Cryptonator Merchant account** which you can get here for free: https://www.cryptonator.com/auth/signup/
 
 * Cryptonator merchant id + secret
 
